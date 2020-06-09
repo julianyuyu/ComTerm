@@ -26,5 +26,11 @@ namespace ComTerm
         {
             devMgr = mgr;
         }
+
+        public void RefreshDeviceList()
+        {
+            ComNames.Clear();
+            ComNames.AddRange(devMgr.FriendlyNames);
+        }
     }
 }

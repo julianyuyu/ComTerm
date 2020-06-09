@@ -30,6 +30,7 @@ namespace ComTerm
 
             dev.OpenDevice();
             DataContext = mvm;
+            mvm.RefreshDeviceList();
         }
     }
 }
