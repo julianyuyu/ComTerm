@@ -1,0 +1,16 @@
+.vs
+*.suo
+*.db
+*.opendb
+*.aps
+*.vcxproj.user
+*.csproj.user
+x64
+Debug
+Release
+Debug_*
+Release_*
+obj
+bin
+packages
+AppPackages
