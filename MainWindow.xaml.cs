@@ -22,15 +22,18 @@ namespace ComTerm
     {
         private MainViewmodel mvm = new MainViewmodel();
         private DeviceManager dev = new DeviceManager();
+        private Model m = new Model();
 
         public MainWindow()
         {
             InitializeComponent();
             mvm.Initialize(dev);
 
-            dev.OpenDevice();
+            dev.InitializeDevices();
             DataContext = mvm;
             mvm.RefreshDeviceList();
+
+            m.Initialize(dev);
         }
     }
 }

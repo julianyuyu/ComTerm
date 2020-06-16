@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 using ComTerm.Util;
+using Microsoft.Win32.SafeHandles;
 using static ComTerm.NativeWindef;
 
-namespace ComTerm.device
+namespace ComTerm
 {
     public class ComDevice : Disposable
     {
@@ -65,6 +68,57 @@ namespace ComTerm.device
             return result;
         }
 
+        protected virtual bool Read(
+            IntPtr outBuffer,
+            uint bytesToRead,
+            ref uint bytesRead)
+        {
+            return ReadFile(deviceHandle, outBuffer, bytesToRead, ref bytesRead, IntPtr.Zero);
+        }
+
+#if false
+        protected virtual bool ReadAsync(
+            IntPtr outBuffer,
+            uint bytesToRead,
+            ref uint bytesRead,
+            IntPtr lpOverlapped)
+        {
+            EventObject = CreateEvent(IntPtr.Zero, true, true, "");
+            int lastError = Marshal.GetLastWin32Error();
+
+            var HIDOverlapped = new System.Threading.Overlapped();
+            HIDOverlapped.OffsetLow = 0;
+            HIDOverlapped.OffsetHigh = 0;
+            HIDOverlapped.EventHandleIntPtr = EventObject;
+
+            c_overlapped(bool manual, bool sigaled)
+
+            {
+                Internal = 0;
+                InternalHigh = 0;
+                Offset = 0;
+                OffsetHigh = 0;
+                hEvent = ::CreateEvent(nullptr, manual, sigaled ? TRUE : FALSE, nullptr);
+            }
+            ~c_overlapped()
+
+            {
+
+                ::CloseHandle(hEvent);
+            }
+            //if (deviceHandle == -1)
+                //Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
+            // The last parameter of the FileStream constructor (isAsync) will make the class use async I/O
+            using (var stream = new FileStream(deviceHandle as SafeFileHandle, FileAccess.ReadWrite, 4096, true))
+            {
+                var buffer = new byte[4096];
+                // Asynchronously read 4kb
+                var bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+            }
+
+            return ReadFile(deviceHandle, outBuffer, bytesToRead, ref bytesRead, &overlap);
+        }
+#endif
         protected virtual bool IoControl(
             uint dwIoControlCode,
             IntPtr lpInBuffer,

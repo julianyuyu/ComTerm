@@ -13,14 +13,21 @@ namespace ComTerm
     {
         public List<string> DeviceNames = new List<string>();
         public List<string> FriendlyNames = new List<string>();
+        private List<ComDevice> Devices = new List<ComDevice>();
 
         public DeviceManager()
         {
         }
 
-        public bool OpenDevice()
+        public ComDevice OpenDevice(int devId)
+        {
+            return Devices[devId];
+        }
+
+        public bool InitializeDevices()
         {
             EnumerateDevice(GUID_DEVINTERFACE_COMPORT);
+
             return true;
         }
 

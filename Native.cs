@@ -121,14 +121,21 @@ namespace ComTerm
             IntPtr lpSecurityAttributes,
             uint dwCreationDisposition,
             uint dwFlagsAndAttributes,
-            IntPtr hTemplateFile
-            );
+            IntPtr hTemplateFile);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         [SuppressUnmanagedCodeSecurity]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool CloseHandle(IntPtr hHandle);
+
+        [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true, CharSet = CharSet.Auto)]
+        internal static extern bool ReadFile(
+            IntPtr hFile,
+            IntPtr outBuffer,
+            uint bytesToRead,
+            ref uint bytesRead,
+            IntPtr lpOverlapped);
 
         [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true, CharSet = CharSet.Auto)]
         internal static extern bool DeviceIoControl(
@@ -139,11 +146,18 @@ namespace ComTerm
             IntPtr lpOutBuffer,
             uint nOutBufferSize,
             ref uint lpBytesReturned,
-            IntPtr lpOverlapped
-            );
-
+            IntPtr lpOverlapped);
 
         //Windows define
+        [StructLayout(LayoutKind.Sequential)]
+        public struct OVERLAPPED
+        {
+            IntPtr Internal;
+            IntPtr InternalHigh;
+            IntPtr Pointer;
+            IntPtr hEvent;
+        };
+
         public const int ATTACH_PARENT_PROCESS = -1;
 
         public const uint GENERIC_READ = 0x80000000;
